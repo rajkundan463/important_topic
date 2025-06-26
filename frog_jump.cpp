@@ -76,7 +76,8 @@ public:
     }
 };
 */
-// tabulation
+// tabulation approach
+/*
 class Solution {
 public:
     int minCost(vector<int>& height) {
@@ -93,5 +94,58 @@ public:
         return dp[n - 1];
     }
 };
+*/
+// IF K JUMP IS THERE 
+// memoization approach
+class Solution {
+public:
+    int memoSolve(int ind, vector<int>& height, vector<int>& dp, int k) {
+        if (ind == 0) return 0;
+        if (dp[ind] != -1) return dp[ind];
+
+        int minCost = INT_MAX;
+
+        for (int j = 1; j <= k; j++) {
+            if (ind - j >= 0) {
+                int cost = memoSolve(ind - j, height, dp, k) + abs(height[ind] - height[ind - j]);
+                minCost = min(minCost, cost);
+            }
+        }
+
+        return dp[ind] = minCost;
+    }
+
+    int minCostMemoization(vector<int>& height, int k) {
+        int n = height.size();
+        vector<int> dp(n, -1);
+        return memoSolve(n - 1, height, dp, k);
+    }
+};
+// tabulation approach
+class Solution {
+public:
+    int minCostTabulation(vector<int>& height, int k) {
+        int n = height.size();
+        vector<int> dp(n, 0);
+        dp[0] = 0;
+
+        for (int i = 1; i < n; i++) {
+            int minCost = INT_MAX;
+
+            for (int j = 1; j <= k; j++) {
+                if (i - j >= 0) {
+                    int cost = dp[i - j] + abs(height[i] - height[i - j]);
+                    minCost = min(minCost, cost);
+                }
+            }
+
+            dp[i] = minCost;
+        }
+
+        return dp[n - 1];
+    }
+};
+
+
 
 
